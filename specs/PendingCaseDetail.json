@@ -8,17 +8,18 @@
     },
     "policyNumber": "string",
     "appEntry": {
-        "platform": "{carrier, firelight, an4, affirm, other}",
-        "electronicFlag": true,
-        "id": "string"
+        "platform": "{firelight, an4, affirm, other}",
+        "isElectronic": true,
+        "transactionId": "string"
     },
     "product": {
         "cusip": "string",
+        "productName": "string",
         "carrierName": "string",
         "carrierCode": "string"
     },
     "status": "{received, inProgress, complete, canceled}",
-    "actionNeededFlag": true,
+    "isActionNeeded": true,
     "signedDate": "2023-10-19",
     "receivedDate": "2023-10-19",
     "issuedDate": "2023-10-19",
@@ -30,7 +31,7 @@
         "cancellationDate": "2023-10-19",
         "cancellationReason": "string"
     },
-    "agents": [
+    "producers": [
         {
             "type": "{individual, entity}",
             "firstName": "string",
@@ -81,13 +82,13 @@
             {
                 "type": "{trainingIncompleteMissing, trainingExpired, agentNotAppointedForSale, jitAppointmentInProgress, agentNotLicensed, other}",
                 "note": "string",
-                "actionNeededFlag": true,
+                "isActionNeeded": true,
                 "responsibleParty": {
                     "npn": "string",
                     "crd": "string",
                     "taxId": "string"
                 },
-                "resolvedFlag": true
+                "isResolved": true
             }
         ]
     },
@@ -98,13 +99,13 @@
         "issues": [
             {
                 "reason": "{applicationIssue, contactCarrier, incompleteForm, missingForm, missingSignature, needClarity, other}",
-                "actionNeededFlag": true,
+                "isActionNeeded": true,
                 "fileName": "string",
                 "formNumber": "string",
                 "content": "base64",
                 "dueDate": "2023-10-19",
                 "note": "string",
-                "resolvedFlag": true
+                "isResolved": true
             }
         ]
     },
@@ -125,7 +126,7 @@
             {
                 "method": "{anotherPolicy, check, clearinghouse, creditCard, debitCard, digitalPayment, electronicFundTransfer, payrollDeduction, wireTransfer}",
                 "type": "{contribution, directRollover, employeeContribution, employerContribution, full1035Exchange, indirectRollover, nonQualifiedTransferOfAssets, partial1035Exchange, qualifiedTransfer}",
-                "actionNeededFlag": true,
+                "isActionNeeded": true,
                 "anticipatedAmount": 154687.93,
                 "receivedAmount": 154690.93,
                 "receivedDate": "2023-10-19",
