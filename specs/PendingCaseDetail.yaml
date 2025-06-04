@@ -338,6 +338,9 @@ components:
       required: false
       schema:
         type: string
+        minLength: 8
+        maxLength: 8
+        pattern: (^[0-9]{8}$)(?<!^0+$)
     receiverParticipantId:
       name: receiverParticipantId
       description: Optional custom header identifying the receiver of the call
@@ -345,6 +348,9 @@ components:
       required: false
       schema:
         type: string
+        minLength: 8
+        maxLength: 8
+        pattern: (^[0-9]{8}$)(?<!^0+$)
     brokerNumber:
       name: brokerNumber
       description: Optional custom header identifying the broker number of the call
@@ -365,6 +371,8 @@ components:
       required: false
       schema:
         type: string
+        minLength: 1
+        maxLength: 30
     associatedFirmId:
       name: associatedFirmId
       description: Optional query parameter for the associated firm ID
@@ -372,6 +380,8 @@ components:
       required: false
       schema:
         type: string
+        minLength: 1
+        maxLength: 65
     cusip:
       name: cusip
       description: Optional query parameter for the CUSIP
@@ -379,6 +389,9 @@ components:
       required: false
       schema:
         type: string
+        minLength: 9
+        maxLength: 9
+        pattern: (^[a-zA-Z0-9](9)$)
     producerNumber:
       name: producerNumber
       description: Optional query parameter for the producer number
@@ -386,6 +399,7 @@ components:
       required: false
       schema:
         type: string
+        maxLength: 30
     npn:
       name: npn
       description: Optional query parameter for the NPN
@@ -393,6 +407,7 @@ components:
       required: false
       schema:
         type: string
+        maxLength: 10
     crdNumber:
       name: crdNumber
       description: Optional query parameter for the CRD number
@@ -400,6 +415,7 @@ components:
       required: false
       schema:
         type: string
+        maxLength: 10
     partyTaxId:
       name: partyTaxId
       description: Optional query parameter for the party tax ID
@@ -407,6 +423,7 @@ components:
       required: false
       schema:
         type: string
+        maxLength: 9
     applicationOriginId:
       name: applicationOriginId
       description: Optional query parameter for the application origin ID
@@ -460,6 +477,7 @@ components:
   schemas:
     IndividualIdentity:
       description: Schema for individual identity data
+      required: [firstName,lastName]
       type: object
       properties:
         type:
@@ -467,27 +485,42 @@ components:
           const: individual
         firstName:
           type: string
+          minLength: 1
+          maxLength: 105
+          pattern: ^[a-zA-Z0-9=()=*@#\\s.,'_/~%$!();:&amp;&quot;+&#x00ae;®`\\-\\\\?\"=]{1,105}
         middleName:
           type: string
+          minLength: 1
+          maxLength: 105
+          pattern: ^[a-zA-Z0-9=()=*@#\\s.,'_/~%$!();:&amp;&quot;+&#x00ae;®`\\-\\\\?\"=]{1,105}
         lastName:
           type: string
+          minLength: 1
+          maxLength: 105
+          pattern: ^[a-zA-Z0-9=()=*@#\\s.,'_/~%$!();:&amp;&quot;+&#x00ae;®`\\-\\\\?\"=]{1,105}
         taxId:
           type: string
+          maxLength: 9
     IndividualProducer:
       description: Schema for individual producer data
       type: object
+      required: [relationships]
       allOf:
         - $ref: "#/components/schemas/IndividualIdentity"
         - type: object
           properties:
             npn:
               type: string
+              maxLength: 10
             crdNumber:
               type: string
+              maxLength: 10
             relationships:
               type: array
               items:
                 type: string
+                minLength: 1
+                maxLength: 30
                 enum:
                   - primaryAgent
                   - secondaryAgent
@@ -502,27 +535,36 @@ components:
     EntityIdentity:
       description: Schema for entity identity data
       type: object
+      required: [type, name]
       properties:
         type:
           type: string
           const: entity
         name:
           type: string
+          minLength: 1
+          maxLength: 180
+          pattern: ^[a-zA-Z0-9=()=*@#\\s.,'_/~%$!();:&amp;&quot;+&#x00ae;®`\\-\\\\?\"=]{1,180} 
         taxId:
           type: string
     EntityProducer:
       description: Schema for entity producer data
       type: object
+      required: [relationships]
       allOf:
         - $ref: "#/components/schemas/EntityIdentity"
         - type: object
           properties:
             npn:
               type: string
+              maxLength: 10
             crdNumber:
               type: string
+              maxLength: 10
             relationships:
               type: array
+              minLength: 1
+              maxLength: 25
               items:
                 type: string
                 enum:
@@ -538,9 +580,12 @@ components:
     PartyRelationship:
       description: Schema for party relationship data
       type: object
+      required: [relationships]
       properties:
         relationships:
           type: array
+          minLength: 1
+          maxLength: 2
           items:
             type: string
             enum:
@@ -560,6 +605,7 @@ components:
     Parties:  
       description: Schema for parties data
       type: array
+      minLength: 1
       items:
         anyOf:
           - $ref: "#/components/schemas/IndividualParty"
@@ -567,6 +613,7 @@ components:
     CanSellValidation:
       description: Schema for policy can sell validation data
       type: object
+      required: [status,isActionNeeded]
       properties:
         status:
           type: string
@@ -581,10 +628,13 @@ components:
           format: date
         note:
           type: string
+          minLength: 1
+          maxLength: 2000
         issues:
           type: array
           items:
             type: object
+            required: [type]
             properties:
               type:
                 type: string
@@ -597,18 +647,24 @@ components:
                   - other
               note:
                 type: string
+                minLength: 1
+                maxLength: 2000
               affectedProducer:
                 type: object
                 properties:
                   npn:
                     type: string
+                    maxLength: 10
                   crdNumber:
                     type: string
+                    maxLength: 10
                   taxId:
                     type: string
+                    maxLength: 9
     Suitability:
       description: Schema for policy suitability data
       type: object
+      required: [status,isActionNeeded]
       properties:
         status:
           type: string
@@ -629,12 +685,15 @@ components:
             - other
         note:
           type: string
+          minLength: 1
+          maxLength: 2000
         dueDate:
           type: string
           format: date
     DocumentReview:
       description: Schema for policy document review data
       type: object
+      required: [status,isActionNeeded]
       properties:
         status:
           type: string
@@ -649,6 +708,8 @@ components:
           format: date
         note:
           type: string
+          minLength: 1
+          maxLength: 2000
         issues:
           type: array
           items:
@@ -666,16 +727,23 @@ components:
                   - other
               formName:
                 type: string
+                minLength: 1
+                maxLength: 200
               formNumber:
                 type: string
+                minLength: 1
+                maxLength: 100
               dueDate:
                 type: string
                 format: date
               note:
                 type: string
+                minLength: 1
+                maxLength: 2000
     Funding:
       description: Schema for policy funding data
       type: object
+      required: [isActionNeeded, status]  
       properties:
         startDate:
           type: string
@@ -690,10 +758,13 @@ components:
           enum: [awaitingReview, inProgress, completed]
         note:
           type: string
+          minLength: 1
+          maxLength: 2000
         sources:
           type: array
           items:
             type: object
+            required: [method,type]
             properties:
               method:
                 type: string
@@ -748,11 +819,17 @@ components:
                 format: date
               note:
                 type: string
+                minLength: 1
+                maxLength: 2000
               cedingCompany:
                 type: object
+                required: [name, accountNumber]
                 properties:
                   name:
                     type: string
+                    minLength: 1
+                    maxLength: 180
+                    pattern:  ^[a-zA-Z0-9=()=*@#\\s.,'_/~%$!();:&amp;&quot;+&#x00ae;®`\\-\\\\?\"=]{1,180}
                   accountNumber:
                     type: string
                   startDate:
@@ -765,13 +842,18 @@ components:
                     format: date
                   note:
                     type: string
+                    minLength: 1
+                    maxLength: 2000
 
     PolicySummary:
       description: Schema for policy summary data
       type: object
+      required: [policyNumber,applicationOrigin,cusip,status,isActionNeeded,signedDate]
       properties:
         policyNumber:
           type: string
+          minLength: 1
+          maxLength: 30
         associatedFirmId:
           type: string
         applicationOrigin:
@@ -779,14 +861,20 @@ components:
           properties:
             platform:
               type: string
+              maxLength: 50
             isElectronic:
               type: boolean
             id:
               type: string
+              maxLength: 65
         cusip:
           type: string
+          minLength: 9
+          maxLength: 9
+          pattern: (^[a-zA-Z0-9](9)$)
         productName:
           type: string
+          maxLength: 180
         isQualified:
           type: boolean
         status:
@@ -839,6 +927,7 @@ components:
           format: date
         cancellation:
           type: object
+          required: [initiator,cancelledDate]
           properties:
             initiator:
               type: string
@@ -848,13 +937,39 @@ components:
               format: date
             reason:
               type: string
+              minLength: 1
+              maxLength: 2000
+        delivery:
+          type: object
+          properties:
+            sentDate:
+              type: string
+              format: date
+            method:
+              type: string
+              enum:
+                - fedex
+                - ups
+                - electronicDelivery
+                - handDelivery
+                - usps
+            trackingNumber:
+              type: string
+              minLength: 1
+              maxLength: 65
         caseManager:
           type: object
+          required: [fullName, phoneNumber]
           properties:
             fullName:
               type: string
+              minLength: 1
+              maxLength: 180
+              pattern:  ^[a-zA-Z0-9=()=*@#\\s.,'_/~%$!();:&amp;&quot;+&#x00ae;®`\\-\\\\?\"=]{1,180}
             phoneNumber:
               type: string
+              minLength: 10
+              maxLength: 15
             emailAddress:
               type: string
             websiteURL:
@@ -876,7 +991,7 @@ components:
           type: integer
         totalItemsCount:
           type: integer
-          maxValue: 1000
+          maximum: 1000
         policies:
           $ref: "#/components/schemas/Policies"
     DetailActivityStatus:
@@ -931,7 +1046,7 @@ components:
           type: integer
         itemsCount:
           type: integer
-          maxValue: 1000
+          maximum: 1000
         totalItemsCount:
           type: integer
         activityStatuses:
@@ -942,20 +1057,33 @@ components:
       properties:
         policyNumber:
           type: string
+          minLength: 1
+          maxLength: 30
         associatedFirmId:
           type: string
+          minLength: 1
+          maxLength: 65
         cusip:
           type: string
+          minLength: 9
+          maxLength: 9
+          pattern: (^[a-zA-Z0-9](9)$)
         producerNumber:
           type: string
+          maxLength: 30
         npn: 
           type: string
+          maxLength: 10
         crdNumber:
           type: string
+          maxLength: 10
         partyTaxId:
           type: string
+          maxLength: 9
         applicationOriginId:
           type: string
         trackingNumber:
           type: string
+          minLength: 1
+          maxLength: 65
       additionalProperties: false
