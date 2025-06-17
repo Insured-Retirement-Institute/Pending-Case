@@ -905,8 +905,10 @@ components:
         isActionNeeded:
           type: boolean
         actionSections:
-          type: string
-          enum: [suitability, cansellvalidation, documentReview, funding]
+          type: array
+          items:
+            type: string
+            enum: [suitability, cansellvalidation, documentReview, funding]
         signedDate:
           type: string
           format: date
