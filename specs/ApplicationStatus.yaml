@@ -161,59 +161,6 @@ paths:
           description: Forbidden
         "404":
           description: NotFound
-  /v1/application-statuses/policies/{policyNumber}/producers:
-    get:
-      operationId: getPolicyProducersByPolicyNumber
-      summary: Retrieve the producers of a policy
-      description: Retrieve producer data of a policy.
-      tags:
-        - Policy
-      parameters:
-        - $ref: '#/components/parameters/correlationId'
-        - $ref: '#/components/parameters/senderParticipantId'
-        - $ref: '#/components/parameters/receiverParticipantId'
-        - $ref: '#/components/parameters/policyNumberRequired'
-        - $ref: '#/components/parameters/associatedFirmId'
-      responses:
-        "200":
-          description: Policy parties successfully retrieved
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Producers"
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: NotFound
-  /v1/application-statuses/policies/{policyNumber}/parties:
-    get:
-      operationId: getPolicyPartiesByPolicyNumber
-      summary: Retrieve the parties of a policy
-      description: Retrieve party data of a policy.
-      tags:
-        - Policy
-      parameters:
-        - $ref: '#/components/parameters/correlationId'
-        - $ref: '#/components/parameters/senderParticipantId'
-        - $ref: '#/components/parameters/receiverParticipantId'
-        - $ref: '#/components/parameters/brokerNumber'
-        - $ref: '#/components/parameters/policyNumberRequired'
-        - $ref: '#/components/parameters/associatedFirmId'
-      responses:
-        "200":
-          description: Policy parties successfully retrieved
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Parties"
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: NotFound
   /v1/application-statuses/policies/{policyNumber}/fundings:
     get:
       operationId: getFundingStatusByPolicyNumber
@@ -896,6 +843,27 @@ components:
                 - usps
             trackingNumber:
               type: string
+        caseManager:
+          type: object
+          required: [fullName, phoneNumber]
+          properties:
+            fullName:
+              type: string
+              minLength: 1
+              maxLength: 180
+              pattern:  ^[a-zA-Z0-9=()=*@#\\s.,'_/~%$!();:&amp;&quot;+&#x00ae;®`\\-\\\\?\"=]{1,180}
+            phoneNumber:
+              type: string
+              minLength: 10
+              maxLength: 15
+            emailAddress:
+              type: string
+            websiteURL:
+              type: string
+        producers:
+          $ref: "#/components/schemas/Producers"
+        parties:
+          $ref: "#/components/schemas/Parties"
     Policy:
       description: Schema for policy data
       type: object
@@ -974,6 +942,10 @@ components:
               type: string
             websiteURL:
               type: string        
+        producers:
+          $ref: "#/components/schemas/Producers"
+        parties:
+          $ref: "#/components/schemas/Parties"
     Policies:
       description: Schema for policies
       type: array
@@ -1024,11 +996,6 @@ components:
       allOf:
         - $ref: '#/components/schemas/PolicySummary'
         - type: object
-          properties:
-            producers:
-              $ref: "#/components/schemas/Producers"
-            parties:
-              $ref: "#/components/schemas/Parties"
     SummaryApplicationStatuses:
       description: Schema for application statuses
       type: array
